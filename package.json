@@ -15,9 +15,9 @@
     "demo": "tsx scripts/demo.ts"
   },
   "devDependencies": {
-    "@types/node": "20.11.30",
-    "tsx": "4.7.1",
-    "typescript": "5.3.3",
-    "vitest": "1.2.0"
+    "@types/node": "20.19.41",
+    "tsx": "4.22.3",
+    "typescript": "5.9.3",
+    "vitest": "4.1.7"
   }
 }
