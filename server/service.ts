@@ -24,6 +24,9 @@ import { bundlesFor, FEATURE_SPECS, TIER_BANDS } from './catalog';
 import { buildProbePlan } from './probePlan';
 import { resolve, type ResolveContext } from './resolver';
 
+// Verdicts cache for 30 min — deliberately shorter than the 6h probe-plan TTL,
+// because a verdict folds in policy + entitlements, which change more often than
+// the list of things to probe.
 const VERDICT_TTL_SECONDS = 30 * 60;
 
 export function handleProbePlan(req: ProbePlanRequest): ProbePlan {

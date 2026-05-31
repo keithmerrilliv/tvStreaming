@@ -27,6 +27,8 @@ export function evaluate(
   predicate: CapabilityPredicate,
   profile: CapabilityProfile,
 ): EvaluationResult {
+  // Exhaustive over CapabilityPredicate['kind'] — no `default` on purpose:
+  // adding a new predicate kind becomes a compile error here until it's handled.
   switch (predicate.kind) {
     case 'codec': {
       const hit = profile.codec.find((c) => c.contentType === predicate.contentType);

@@ -23,6 +23,9 @@ async function probeOne(query: DrmQuery): Promise<DrmResult> {
   // Strongest-first: the requested levels if given, else the full ladder.
   const levels = orderStrongestFirst(query.robustness ?? [...ROBUSTNESS_LADDER]);
 
+  // Return on the FIRST level that's granted: walking strongest→weakest, that's
+  // the highest robustness the device actually reaches (the real L1-vs-L3 line),
+  // not merely whether the key system name is recognised.
   for (const robustness of levels) {
     if (await accessGranted(query.keySystem, robustness)) {
       return { keySystem: query.keySystem, supported: true, robustness };

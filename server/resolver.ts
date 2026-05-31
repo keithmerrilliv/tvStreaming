@@ -88,6 +88,8 @@ export function resolveFeature(
       const why = evaluate(lowest.when, profile);
       return denied(spec.feature, why.failedPredicate ?? lowest.when.id, why.detail);
     }
+    // Record WHICH rung was chosen alongside its params, so the grant is
+    // self-describing downstream (e.g. params.rung === 'rung.gl1' in telemetry).
     params = { ...selected.params, rung: selected.id };
   }
 
@@ -171,16 +173,21 @@ function defaultDeviceKey(profile: CapabilityProfile): string {
   const p = profile.platform;
   const version =
     p.kind === 'webos' ? p.webosVersion : p.kind === 'tizen' ? p.tizenVersion : undefined;
+  // A stable, non-identifying fingerprint: platform + OS/shell version + GPU
+  // string. Enough to bucket a device consistently across reboots — no stored
+  // id, no PII — so the same device always lands in the same rollout cohort.
   return [p.kind, version ?? '?', profile.graphics.renderer ?? '?', profile.shellVersion].join(
     '|',
   );
 }
 
 function fnv1a(str: string): number {
-  let h = 0x811c9dc5;
+  let h = 0x811c9dc5; // FNV-1a 32-bit offset basis
   for (let i = 0; i < str.length; i++) {
     h ^= str.charCodeAt(i);
+    // Math.imul does the multiply in true 32-bit space; a plain `*` by the FNV
+    // prime would overflow JS's 53-bit float and silently lose the low bits.
     h = Math.imul(h, 0x01000193);
   }
-  return h >>> 0;
+  return h >>> 0; // coerce to unsigned 32-bit so the downstream `% 100` is stable
 }
