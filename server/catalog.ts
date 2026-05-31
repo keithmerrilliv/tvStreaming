@@ -3,9 +3,8 @@
  * ───────────────
  * The hot-reloadable policy data: the feature specs the resolver interprets,
  * the tier bands the cosmetic label derives from, and the bundle map. In a
- * real deployment these are JSON/TS files reloaded without app resubmission
- * (see docs/INTERVIEW.md §"Server-owned policy"). Here they're inline so the
- * demo runs with zero external state.
+ * real deployment these are JSON/TS files reloaded without app resubmission;
+ * here they're inline so the demo runs with zero external state.
  *
  * Note how the four "decision shapes" appear in the data, not the code:
  *   - Hard gate:                multi-angle.requires (AND of axes)

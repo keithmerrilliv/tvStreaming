@@ -11,7 +11,7 @@
  * makes the probe LIE: the C9 would report `runtime.es2020 = true`, the
  * resolver would grant multi-angle, and the runtime couldn't deliver it — the
  * exact over-promise this whole design exists to prevent. See
- * `client/probe/runtime.ts` and docs/INTERVIEW.md.
+ * `client/probe/runtime.ts`.
  *
  * FORBIDDEN here — the probe proxies. `runtime.ts` must keep measuring their
  * ABSENCE on an old engine, so they must stay un-polyfilled:

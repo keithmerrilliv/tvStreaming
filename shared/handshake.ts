@@ -5,11 +5,11 @@
  * This file is the single source of truth, imported by BOTH sides — there is
  * no second schema to drift out of sync.
  *
- * Design constraints (see docs/INTERVIEW.md §"Forward-compatible by contract"):
+ * Design constraints:
  *   - Forward-compatible in both directions. The fleet is permanently
  *     version-skewed; unknown fields must be ignored, never rejected.
  *   - The shell sends measurements only — never a tier hint. All judgment
- *     lives server-side (see §"Server-owned policy").
+ *     lives server-side.
  *   - Two rounds: probe plan first (so detection itself stays updatable),
  *     then profile → verdict.
  */

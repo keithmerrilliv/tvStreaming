@@ -1,6 +1,6 @@
 # tvStreaming — Capability-Tiering Streaming Demo
 
-A small, sharp implementation of the architecture in `docs/INTERVIEW.md`: a
+A small, sharp implementation of a capability-tiering architecture: a
 certified TV **shell measures** device capability, a **server judges** it
 per-feature against declarative policy, and the cosmetic *tier* label is derived
 last — an output, never an input.
@@ -54,7 +54,6 @@ client/         The certified-shell side.
 
 test/           Vitest: evaluator, resolver (the C9 conjunction + gap profiles), service.
 scripts/demo.ts Runnable end-to-end smoke + telemetry rollup.
-docs/INTERVIEW.md   Talking points mapped to each interview topic.
 ```
 
 ## Building & sideloading for webOS (LG C9)
@@ -103,5 +102,5 @@ Linear tiers can't express that; per-feature capability gating can.
 The committed `webOSStream/` app is the client-only Widevine/Shaka playback POC (a real
 DRM license handshake against public test content). This `tvStreaming/` workspace is the
 client-server expansion: the resolver and handshake that decide *what* that player is
-allowed to do on a given device. See `docs/INTERVIEW.md §7` on why playback uses legal
-DRM test vectors (Axinom/Shaka) rather than a commercial catalog.
+allowed to do on a given device. Playback uses legal DRM test vectors
+(Axinom/Shaka) rather than a commercial catalog.

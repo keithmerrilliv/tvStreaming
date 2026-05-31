@@ -6,8 +6,7 @@
  * testable without a server and could be hosted on anything (node:http here,
  * a Lambda, an edge worker). server.ts is the only file that knows about HTTP.
  *
- * Two guarantees live here, both demanded by a permanently version-skewed fleet
- * (see docs/INTERVIEW.md §"Forward-compatible by contract"):
+ * Two guarantees live here, both demanded by a permanently version-skewed fleet:
  *   1. Unknown profile fields are ignored, never rejected (structural typing +
  *      we only read what we know; the `ext` bag is never inspected).
  *   2. If resolution throws for ANY reason, the shell still gets a usable,

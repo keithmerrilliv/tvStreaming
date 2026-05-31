@@ -67,8 +67,8 @@ export interface PolicyOverrides {
 // Predicate vocabulary
 // ─────────────────────────────────────────────────────────────
 // First-pass set. Composites (and/or) cover the common richer expressions;
-// the open question (see docs/INTERVIEW.md §"Open threads") is whether we also
-// need count-thresholds and version ranges as first-class predicates.
+// the open question is whether we also need count-thresholds and version
+// ranges as first-class predicates.
 // Every predicate carries an `id` so denials are recordable.
 
 export type CapabilityPredicate =
