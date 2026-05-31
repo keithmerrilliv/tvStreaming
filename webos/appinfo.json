@@ -1,0 +1,13 @@
+{
+  "id": "com.example.tvstreaming",
+  "version": "0.1.0",
+  "vendor": "Example Corp",
+  "type": "web",
+  "main": "index.html",
+  "title": "TV Streaming Tier Demo",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "iconColor": "#0c58a8",
+  "disableBackHistoryAPI": true,
+  "optimized": true
+}

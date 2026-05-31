@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- webOS TV apps render at a fixed 1920x1080 surface. -->
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1, user-scalable=no">
+  <title>TV Streaming Tier Demo</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #0b0f17; color: #e8eef6;
+      font-family: sans-serif; overflow: hidden; }
+    #app { display: flex; align-items: center; justify-content: center; height: 100%; }
+    #app .status { font-size: 28px; opacity: 0.7; }
+  </style>
+
+  <!--
+    Certified-shell bootstrap. The shell injects its identity on the global
+    BEFORE the app bundle runs (main.ts reads window.__SHELL__). This inline
+    glue ALSO executes on the C9's Chromium-53, so it is deliberately written
+    ES5-safe: no arrow functions, optional chaining, template literals, or
+    const/let. (The bundled app.js is transpiled to chrome53; this snippet is
+    hand-authored, so the discipline is on us.)
+  -->
+  <script>
+    (function () {
+      var isWebOS = (typeof webOSSystem !== 'undefined') || (typeof PalmSystem !== 'undefined');
+      window.__SHELL__ = {
+        version: '0.1.0',
+        platform: isWebOS ? { kind: 'webos' } : { kind: 'browser' },
+        // Where the policy resolver lives — replace with your server URL.
+        // Unreachable → main.ts uses the conservative baseline floor, so the
+        // app still launches and plays (the one client-side tier decision).
+        resolverBaseUrl: 'https://resolver.example.com'
+      };
+    })();
+  </script>
+</head>
+<body>
+  <div id="app"><div class="status">Negotiating capabilities&hellip;</div></div>
+
+  <!-- The chrome53-targeted bundle (esbuild). Sibling of index.html in the package root. -->
+  <script src="app.js"></script>
+</body>
+</html>

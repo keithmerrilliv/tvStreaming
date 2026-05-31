@@ -35,3 +35,6 @@ yarn-error.log*
 tmp/
 temp/
 *.zip
+
+# webOS package artifacts (icons under webos/ are committed; the .ipk is built)
+*.ipk

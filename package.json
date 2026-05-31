@@ -12,13 +12,20 @@
     "typecheck:client": "tsc -p tsconfig.client.json",
     "test": "vitest run",
     "test:watch": "vitest",
+    "audit:prod": "node scripts/audit-prod.mjs",
     "serve": "tsx server/server.ts",
     "demo": "tsx scripts/demo.ts",
-    "build:client": "esbuild client/main.ts --bundle --format=iife --target=chrome53 --legal-comments=none --metafile=dist/meta.json --outfile=dist/app.js",
-    "build": "npm run typecheck:client && npm run build:client"
+    "icons": "node scripts/generate-icons.mjs",
+    "build:client": "esbuild client/main.ts --bundle --format=iife --target=chrome53 --legal-comments=none --metafile=dist/meta.json --outfile=dist/webos/app.js",
+    "build": "npm run typecheck:client && npm run build:client",
+    "package:webos": "node scripts/package-webos.mjs",
+    "package": "npm run build && npm run package:webos",
+    "install:webos": "ares-install $(ls -t dist/*.ipk | head -1)",
+    "launch:webos": "ares-launch com.example.tvstreaming"
   },
   "devDependencies": {
     "@types/node": "20.19.41",
+    "@webosose/ares-cli": "2.4.0",
     "esbuild": "0.28.0",
     "tsx": "4.22.3",
     "typescript": "5.9.3",

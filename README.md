@@ -57,6 +57,39 @@ scripts/demo.ts Runnable end-to-end smoke + telemetry rollup.
 docs/INTERVIEW.md   Talking points mapped to each interview topic.
 ```
 
+## Building & sideloading for webOS (LG C9)
+
+The client ships to the TV as a single Chromium-53-safe bundle wrapped in a webOS
+app package.
+
+```
+npm run build           # typecheck (browser context) + esbuild → dist/webos/app.js
+npm run package         # build, then ares-package → dist/<id>_<version>_all.ipk
+npm run install:webos   # ares-install the newest .ipk onto a dev-mode TV
+npm run launch:webos    # ares-launch com.example.tvstreaming
+```
+
+Three stages, each with one job:
+
+- **Transpile** — esbuild bundles `client/main.ts` with `--target=chrome53`,
+  lowering syntax the C9 can't parse (`?.`, `??`, `async/await`, object spread)
+  to ES2015. async/await becomes native generators, so no `regenerator-runtime`.
+- **Polyfill** — `client/polyfills.ts` adds *only* curated missing built-ins via
+  granular core-js imports, and deliberately omits the ones the `runtime.es2020`
+  probe inspects — so polyfilling can't make the capability probe lie.
+- **Package** — `webos/` holds the static shell (`appinfo.json`, `index.html`,
+  icons); `scripts/package-webos.mjs` stages them with the bundle and runs
+  ares-package. Regenerate placeholder icons with `npm run icons`.
+
+Sideloading needs Developer Mode on the TV and a device registered via
+`ares-setup-device` (LG webOS TV CLI).
+
+**Packaging-tool note.** ares-package is vendored as the dev dependency
+`@webosose/ares-cli` (the newer `@webos-tools/cli@3.2.4` ships a broken `rimraf`
+call that fails on every Node version). Its old transitive tree makes `npm audit`
+report findings — all dev-only; none ship in the .ipk. `npm run audit:prod`
+confirms the shipped closure (core-js only) is clean.
+
 ## The one idea to take away
 
 A device is not a tier. The **LG C9** has the panel and decode silicon for premium
