@@ -1,3 +1,11 @@
+/**
+ * Resolver tests — the three phases, on real device fixtures
+ * ──────────────────────────────────────────────────────────
+ * The headline cases: the C9 conjunction (denied SOLELY on runtime.es2020
+ * despite capable decode + DRM), the modern-GPU/old-runtime gap profile, rung
+ * selection (graceful degradation), policy as a separate axis evaluated last,
+ * and that deriveTier is a pure function of the grant set — output, not input.
+ */
 import { describe, expect, it } from 'vitest';
 import type { FeatureGrant } from '../shared/handshake';
 import type { FeatureSpec } from '../shared/policy';

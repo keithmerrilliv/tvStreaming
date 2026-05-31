@@ -1,3 +1,11 @@
+/**
+ * Service tests — the two handlers end to end (no HTTP)
+ * ────────────────────────────────────────────────────
+ * Round 1 derives the probe plan from the catalog (can't drift); Round 2
+ * assembles the verdict + bundle set; forward-compat tolerates unknown profile
+ * fields; the Baseline fallback is a conservative, non-error verdict; and the
+ * runtime probe runs without a DOM.
+ */
 import { describe, expect, it } from 'vitest';
 import { baselineFallback, handleProbePlan, handleResolve } from '../server/service';
 import { probeRuntime } from '../client/probe/runtime';

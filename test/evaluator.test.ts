@@ -1,3 +1,11 @@
+/**
+ * Evaluator tests — leaf predicates + deepest-leaf attribution
+ * ────────────────────────────────────────────────────────────
+ * Exercises the pure (predicate, profile) → result function directly, off the
+ * device fixtures. The load-bearing assertions: codec needs `smooth`, not just
+ * `supported`; robustness is compared on the shared ladder; and a failing
+ * composite attributes to the deepest LEAF predicate, never the `and`/`or`.
+ */
 import { describe, expect, it } from 'vitest';
 import type { CapabilityProfile } from '../shared/handshake';
 import type { CapabilityPredicate } from '../shared/policy';
