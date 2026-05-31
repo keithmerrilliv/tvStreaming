@@ -1,0 +1,16 @@
+{
+  // Client typecheck context: the certified-shell bundle that ships to the TV.
+  // esbuild does the actual transpile/emit (see `build:client`); tsc here only
+  // type-checks, but under the runtime contract the shell really lives in:
+  //   - target ES2015  → the syntax floor esbuild lowers to for Chromium-53.
+  //   - types: []      → it's a BROWSER, not Node. No accidental Node globals.
+  //   - lib stays ES2020 (inherited) → the probe may *reference* ES2020 library
+  //     APIs (it feature-detects them); we polyfill or guard at runtime.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2015",
+    "types": []
+  },
+  "include": ["client", "shared"],
+  "exclude": ["node_modules", "client/fixtures"]
+}
