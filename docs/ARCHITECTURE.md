@@ -207,8 +207,8 @@ Chromium-53 engine. Run `npm run demo`:
 - `deriveTier` then labels it **standard** (hdr-overlay enabled, multi-angle
   not) — a label computed from the grants, not used to make them.
 
-The non-co-varying conjunction (great hardware, old runtime) is the whole point:
-linear tiers can't express it; per-axis gating can.
+Independent axes like these — capable hardware, old runtime — are the whole point,
+and per-axis gating is what captures them where a single tier number can't.
 
 ---
 

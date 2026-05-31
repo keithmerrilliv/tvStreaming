@@ -13,7 +13,7 @@
  * generation (Promise.allSettled, globalThis, String.prototype.matchAll, BigInt
  * the value). It's a proxy for "this engine is modern enough", not a literal
  * grammar test. The LG C9's Chromium 53 fails these; its decode hardware doesn't
- * care — which is the whole non-co-varying-axes story.
+ * care — which is the whole independent-axes story.
  */
 
 export type RuntimeCheck = () => boolean;

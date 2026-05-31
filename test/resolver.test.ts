@@ -24,7 +24,7 @@ const grantFor = (grants: FeatureGrant[], feature: string): FeatureGrant => {
   return g;
 };
 
-describe('the C9 problem — non-co-varying axes', () => {
+describe('the C9 problem — independent capability axes', () => {
   it('denies multi-angle SOLELY on runtime.es2020, despite capable decode + DRM', () => {
     // Entitlement granted on purpose: proves the denial is the runtime gate,
     // not the business policy that comes later.

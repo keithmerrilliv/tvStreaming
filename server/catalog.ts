@@ -9,7 +9,7 @@
  * Note how the four "decision shapes" appear in the data, not the code:
  *   - Hard gate:                multi-angle.requires (AND of axes)
  *   - Graceful degradation:     hdr-overlay.rungs (webgl2 → webgl1 → ...)
- *   - Non-co-varying conjunction: multi-angle needs decode AND es2020 (the C9 problem)
+ *   - Independent-axis conjunction: multi-angle needs decode AND es2020 (the C9 problem)
  *   - Policy override:          multi-angle.policy.requiresEntitlement
  */
 
