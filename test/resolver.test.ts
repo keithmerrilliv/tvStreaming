@@ -66,6 +66,26 @@ describe('rung selection (graceful degradation)', () => {
     expect(ma.enabled).toBe(true);
     expect(ma.params).toMatchObject({ rung: 'rung.flagship', maxAngles: 4 });
   });
+
+  it('denies when the gates pass but no rung clears the quality floor', () => {
+    // Gates pass (none required), but the only rung needs WebGL2 and the baseline
+    // set-top reports WebGL 0 — so it clears no quality floor.
+    const spec: FeatureSpec = {
+      feature: 'fancy-overlay',
+      requires: [],
+      rungs: [
+        {
+          id: 'rung.gl2-only',
+          params: { renderer: 'webgl2' },
+          when: { id: 'rung.gl2-only.when', kind: 'webgl', minVersion: 2 },
+        },
+      ],
+    };
+    const g = resolveFeature(spec, baselineStb, {});
+    expect(g.enabled).toBe(false);
+    // Attributed to the lowest rung's predicate, not the feature itself.
+    expect(g.deniedBy?.predicate).toBe('rung.gl2-only.when');
+  });
 });
 
 describe('policy overrides — separate axis, evaluated last', () => {
@@ -85,15 +105,46 @@ describe('policy overrides — separate axis, evaluated last', () => {
     expect(grantFor(features, 'multi-angle').deniedBy?.predicate).toBe('runtime.es2020');
   });
 
-  it('rollout bucketing is deterministic for a given device key', () => {
+  it('rollout gates in-bucket keys in, out-of-bucket keys out, deterministically', () => {
     const spec: FeatureSpec = {
       feature: 'beta',
       requires: [],
       policy: { rolloutPercent: 50 },
     };
-    const a = resolveFeature(spec, tizen2024Flagship, { deviceKey: 'device-123' });
-    const b = resolveFeature(spec, tizen2024Flagship, { deviceKey: 'device-123' });
-    expect(a.enabled).toBe(b.enabled); // same key → same bucket, no RNG/clock
+    // 'device-123' hashes into the 50% bucket (roll 38); 'out-bucket' does not (roll 80).
+    expect(resolveFeature(spec, tizen2024Flagship, { deviceKey: 'device-123' }).enabled).toBe(true);
+    const out = resolveFeature(spec, tizen2024Flagship, { deviceKey: 'out-bucket' });
+    expect(out.enabled).toBe(false);
+    expect(out.deniedBy?.predicate).toBe('policy.rollout');
+    // Deterministic: same key → same result, no RNG/clock.
+    expect(resolveFeature(spec, tizen2024Flagship, { deviceKey: 'device-123' }).enabled).toBe(true);
+  });
+
+  it('rollout salt is the feature id, so two features at the same percent decorrelate', () => {
+    const mk = (feature: string): FeatureSpec => ({
+      feature,
+      requires: [],
+      policy: { rolloutPercent: 50 },
+    });
+    // Same device, two features both at 50%. Salting by percent (the old bug) gated
+    // the identical cohort; salting by feature id makes the two decisions differ
+    // (device-123 rolls 99 for featA → out, 18 for featB → in).
+    const featA = resolveFeature(mk('featA'), tizen2024Flagship, { deviceKey: 'device-123' });
+    const featB = resolveFeature(mk('featB'), tizen2024Flagship, { deviceKey: 'device-123' });
+    expect(featA.enabled).not.toBe(featB.enabled);
+  });
+
+  it('denies on a blocked firmware substring, and allows otherwise', () => {
+    const spec: FeatureSpec = {
+      feature: 'gated',
+      requires: [],
+      policy: { denyFirmware: ['buggy-1.2'] },
+    };
+    const blocked = resolveFeature(spec, tizen2024Flagship, { firmware: 'webos-buggy-1.2.7' });
+    expect(blocked.enabled).toBe(false);
+    expect(blocked.deniedBy?.predicate).toBe('policy.firmware');
+    const ok = resolveFeature(spec, tizen2024Flagship, { firmware: 'webos-3.4.0' });
+    expect(ok.enabled).toBe(true);
   });
 });
 

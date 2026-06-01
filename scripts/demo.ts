@@ -17,7 +17,6 @@ import type { Verdict } from '../shared/handshake';
 const ENTITLEMENTS = ['live-premium'];
 
 function line(s = ''): void {
-  // eslint-disable-next-line no-console
   console.log(s);
 }
 

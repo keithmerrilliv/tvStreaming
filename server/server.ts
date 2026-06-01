@@ -73,6 +73,5 @@ function sendJson(res: ServerResponse, status: number, payload: unknown): void {
 }
 
 server.listen(PORT, HOST, () => {
-  // eslint-disable-next-line no-console
   console.log(`resolver service listening on http://${HOST}:${PORT}`);
 });

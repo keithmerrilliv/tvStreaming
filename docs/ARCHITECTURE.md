@@ -154,9 +154,10 @@ into none of them.
 ### Deterministic rollout — no clock, no RNG
 
 Phase-3 rollout bucketing uses an **FNV-1a hash** of a stable device key
-(`fnv1a`, `server/resolver.ts`), salted by the rollout percentage so two
-features at the same percent don't gate the identical cohort. The same device
-always lands in the same bucket — reproducible and testable with zero stored
+(`fnv1a`, `server/resolver.ts`), salted by the **feature id** so two features at
+the same percent don't gate the identical cohort — and so ramping a rollout up
+only adds devices, never reshuffles the cohort. The same device always lands in
+the same bucket — reproducible and testable with zero stored
 state (`test/resolver.test.ts` asserts it).
 
 ---

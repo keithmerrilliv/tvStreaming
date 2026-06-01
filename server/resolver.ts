@@ -94,7 +94,7 @@ export function resolveFeature(
   }
 
   // ── Phase 3: policy overrides ────────────────────────────────────────
-  const policyDenial = spec.policy ? applyPolicy(spec.policy, ctx) : undefined;
+  const policyDenial = spec.policy ? applyPolicy(spec.policy, ctx, spec.feature) : undefined;
   if (policyDenial) {
     return denied(spec.feature, policyDenial.predicate, policyDenial.detail);
   }
@@ -108,6 +108,7 @@ export function resolveFeature(
 function applyPolicy(
   policy: PolicyOverrides,
   ctx: ResolveContext,
+  feature: string,
 ): { predicate: string; detail?: string } | undefined {
   if (policy.requiresEntitlement) {
     const held = ctx.entitlements ?? [];
@@ -127,7 +128,7 @@ function applyPolicy(
   }
 
   if (policy.rolloutPercent !== undefined) {
-    const roll = rolloutRoll(ctx.deviceKey ?? '', policy);
+    const roll = rolloutRoll(ctx.deviceKey ?? '', feature);
     if (roll >= policy.rolloutPercent) {
       return {
         predicate: 'policy.rollout',
@@ -163,10 +164,12 @@ export function deriveTier(grants: FeatureGrant[], bands: TierBand[]): TierName 
 // Deterministic rollout — no RNG, no clock. Same device → same bucket.
 // ─────────────────────────────────────────────────────────────
 
-function rolloutRoll(deviceKey: string, policy: PolicyOverrides): number {
-  // Salt by the rollout size so two features at the same percentage don't
-  // gate the identical cohort (avoids correlated rollouts).
-  return fnv1a(`${deviceKey}:${policy.rolloutPercent}`) % 100;
+function rolloutRoll(deviceKey: string, feature: string): number {
+  // Salt by the FEATURE id so two features at the same percentage don't gate the
+  // identical cohort. The percentage is deliberately NOT part of the salt: ramping
+  // a rollout up (say 40% → 60%) then only ADDS devices to the cohort — it never
+  // reshuffles who is already in.
+  return fnv1a(`${deviceKey}:${feature}`) % 100;
 }
 
 function defaultDeviceKey(profile: CapabilityProfile): string {

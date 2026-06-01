@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import type { CapabilityProfile } from '../shared/handshake';
 import type { CapabilityPredicate } from '../shared/policy';
 import { evaluate } from '../server/evaluator';
-import { lgC9, tizen2024Flagship } from '../client/fixtures/devices';
+import { baselineStb, lgC9, tizen2024Flagship } from '../client/fixtures/devices';
 
 function run(p: CapabilityPredicate, profile: CapabilityProfile) {
   return evaluate(p, profile);
@@ -77,6 +77,31 @@ describe('evaluate — leaf predicates', () => {
   it('runtime: reads the named check', () => {
     expect(run({ id: 'r', kind: 'runtime', check: 'es2020' }, lgC9).pass).toBe(false);
     expect(run({ id: 'r', kind: 'runtime', check: 'es2020' }, tizen2024Flagship).pass).toBe(true);
+  });
+
+  it('gl-extension: passes when present, fails naming the missing extension', () => {
+    // lgC9 reports extensions: ['OES_texture_half_float'].
+    expect(
+      run({ id: 'ext.ok', kind: 'gl-extension', extension: 'OES_texture_half_float' }, lgC9).pass,
+    ).toBe(true);
+    const missing = run(
+      { id: 'ext.missing', kind: 'gl-extension', extension: 'EXT_color_buffer_float' },
+      lgC9,
+    );
+    expect(missing.pass).toBe(false);
+    expect(missing.failedPredicate).toBe('ext.missing');
+    expect(missing.detail).toContain('EXT_color_buffer_float');
+  });
+
+  it('codec: denies a present-but-unsupported codec with the right detail', () => {
+    // baselineStb reports the HEVC codec as supported: false.
+    const r = run(
+      { id: 'codec.hevc', kind: 'codec', contentType: 'video/mp4; codecs="hvc1.1.6.L120.B0"' },
+      baselineStb,
+    );
+    expect(r.pass).toBe(false);
+    expect(r.failedPredicate).toBe('codec.hevc');
+    expect(r.detail).toContain('not supported');
   });
 });
 

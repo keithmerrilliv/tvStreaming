@@ -44,5 +44,3 @@ export async function runProbePlan(
     runtime: probeRuntime(plan.runtimeChecks),
   };
 }
-
-export { probeCodecs, probeDisplay, probeDrm, probeGraphics, probeRuntime };

@@ -24,6 +24,15 @@ describe('Round 1 — probe plan derives from the catalog', () => {
   it('encodes the shell version in the plan id', () => {
     expect(plan.planId).toBe('plan-webos-1.0.0');
   });
+
+  it('requests exactly the catalog targets — nothing extra', () => {
+    // Exactly the distinct codecs/runtime checks the specs reference, not more.
+    expect(plan.codecs).toEqual(['video/mp4; codecs="hvc1.1.6.L120.B0"']);
+    expect(plan.runtimeChecks).toEqual(['es2020']);
+    // The catalog's webgl/hdr predicates read always-measured fields, so they
+    // contribute NO gl-extension probe targets — the plan stays minimal.
+    expect(plan.glExtensions).toEqual([]);
+  });
 });
 
 describe('Round 2 — verdict assembly', () => {
@@ -62,6 +71,16 @@ describe('Baseline fallback', () => {
     expect(v.fallback).toBe(true);
     expect(v.features.every((f) => !f.enabled)).toBe(true);
     expect(v.bundles.some((b) => b.required)).toBe(true);
+  });
+
+  it('handleResolve degrades to baseline when resolution throws', () => {
+    // A malformed profile (codec isn't an array) makes the evaluator throw;
+    // handleResolve must catch it and return baseline, never propagate the error.
+    const broken = { ...lgC9, codec: null } as never;
+    const verdict = handleResolve(broken, { entitlements: ['live-premium'] });
+    expect(verdict.fallback).toBe(true);
+    expect(verdict.tier).toBe('baseline');
+    expect(verdict.features.every((f) => !f.enabled)).toBe(true);
   });
 });
 

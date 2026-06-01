@@ -115,6 +115,12 @@ export interface DisplayResult {
   // treat physical resolution as untrusted at this layer.
 }
 
+/**
+ * HDR transfer functions the display probe can report. Note: 'smpte2084' is the
+ * formal (HDR10) name for the PQ curve — the CSS probe can't tell them apart, so
+ * it reports 'pq'. 'smpte2084' is reserved for a future probe that can distinguish
+ * it; don't gate on it today (it will never match real probe output).
+ */
 export type HdrFormat = 'hlg' | 'pq' | 'smpte2084' | 'none';
 
 // ─────────────────────────────────────────────────────────────
