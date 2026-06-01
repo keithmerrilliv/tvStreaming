@@ -1,5 +1,7 @@
 # tvStreaming — Capability-Tiering Streaming Demo
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A small, sharp implementation of a capability-tiering architecture: a
 certified TV **shell measures** device capability, a **server judges** it
 per-feature against declarative policy, and the cosmetic *tier* label is derived

@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Capability-tiering streaming demo: certified shell measures, server judges. Resolver + two-round handshake.",
+  "license": "MIT",
   "engines": {
     "node": ">=20"
   },
