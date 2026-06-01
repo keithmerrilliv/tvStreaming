@@ -38,8 +38,3 @@ temp/
 
 # webOS package artifacts (icons under webos/ are committed; the .ipk is built)
 *.ipk
-
-# Local-only: interview prep notes — kept on disk, intentionally not shared
-docs/INTERVIEW.md
-# Local-only: interview ramp-up / study material — kept on disk, not shared
-prep/
