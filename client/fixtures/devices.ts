@@ -7,7 +7,7 @@
  * decode, HDR and hardware Widevine, gated only by an antique JS engine.
  *
  * The others are synthetic profiles of the kind the LM Studio firehose on
- * zooshly generates to stress the resolver's gaps.
+ * the dev host generates to stress the resolver's gaps.
  */
 
 import type { CapabilityProfile } from '../../shared/handshake';

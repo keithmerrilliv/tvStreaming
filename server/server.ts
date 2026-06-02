@@ -3,7 +3,7 @@
  * ──────────────────────────────────────────
  * The thinnest possible adapter from HTTP to the framework-agnostic handlers
  * in service.ts. Stateless. LAN-bound by default so the C9 bench device
- * (192.168.50.223) can hit zooshly (192.168.50.101) directly.
+ * (192.168.50.223) can hit the server (192.168.50.101) directly.
  *
  *   POST /probe-plan   ProbePlanRequest        → ProbePlan
  *   POST /resolve      { profile, context? }   → Verdict
