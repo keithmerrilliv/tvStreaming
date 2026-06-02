@@ -66,10 +66,21 @@ export interface PolicyOverrides {
 // ─────────────────────────────────────────────────────────────
 // Predicate vocabulary
 // ─────────────────────────────────────────────────────────────
-// First-pass set. Composites (and/or) cover the common richer expressions;
-// the open question is whether we also need count-thresholds and version
-// ranges as first-class predicates.
-// Every predicate carries an `id` so denials are recordable.
+// A discriminated union: every member carries a literal `kind` tag, so the
+// evaluator can `switch (predicate.kind)` and have each branch narrowed to the
+// matching shape (its fields type-checked) with no casts. The switch has no
+// `default`, which makes the set exhaustive — adding a member here without
+// handling it is a compile error in server/evaluator.ts, not a runtime gap.
+//
+// It is also recursive: codec/webgl/gl-extension/drm/hdr/runtime are the leaves
+// (real capability checks), while and/or are composites whose children are
+// themselves CapabilityPredicates — so a value is an expression *tree*, and the
+// evaluator walks it by recursion. Every predicate carries an `id` so a denial
+// names the deepest leaf that failed, never the composite wrapping it.
+//
+// Open question: this is a first-pass set. Composites (and/or) cover the common
+// richer expressions; whether we also need count-thresholds and version ranges
+// as first-class predicates is undecided.
 
 export type CapabilityPredicate =
   | CodecSupportedPredicate
