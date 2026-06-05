@@ -99,10 +99,18 @@ grants it everything its hardware earns, denies multi-angle **for exactly one re
 reason** (`runtime.es2020`), and turns that recorded reason into a ranked unlock list.
 Linear tiers can't express that; per-feature capability gating can.
 
-## Relationship to the sibling app
+## Relationship to the sibling apps
 
 The committed `webOSStream/` app is the client-only Widevine/Shaka playback POC (a real
 DRM license handshake against public test content). This `tvStreaming/` workspace is the
 client-server expansion: the resolver and handshake that decide *what* that player is
 allowed to do on a given device. Playback uses legal DRM test vectors
 (Axinom/Shaka) rather than a commercial catalog.
+
+A further sibling, [`ParamountDemo`](https://github.com/keithmerrilliv/ParamountDemo), folds
+this resolver and a Shaka/Widevine player into a single webOS app and runs it on a real **LG
+C9** — validating the architecture on hardware, including the polyfill-vs-probe hazard this
+design guards against (a `core-js` import had masked the `runtime.es2020` probe, making the C9
+momentarily look ES2020-capable until the probe was corrected). Its
+[real-device report](https://github.com/keithmerrilliv/ParamountDemo/blob/main/docs/REAL_DEVICE_REPORT.md)
+has the captured client↔server handshake and Widevine telemetry.
